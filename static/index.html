@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive UI Replication</title>
+    <meta name="twitter:card" content="summary_large_image">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+        .transition-transform {
+            transition: transform 0.3s ease;
+        }
+        .dropdown-menu {
+            display: none;
+        }
+        .dropdown-menu.active {
+            display: block;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .accordion-content.active {
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-blue-600">FastDL</h1>
+                </div>
+
+                <div class="relative">
+                    <button id="langToggle" class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            <path d="M2 12h20"/>
+                        </svg>
+                        <span class="hidden sm:inline">English</span>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+
+                    <div id="langDropdown" class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-y-auto">
+                        <button class="block w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">English</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">Spanish</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">French</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">German</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">Arabic</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">Hindi</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">Chinese</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">Japanese</button>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-1 pb-3 overflow-x-auto">
+                <button class="px-4 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors whitespace-nowrap">Video</button>
+                <button class="px-4 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors whitespace-nowrap">Photo</button>
+                <button class="px-4 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors whitespace-nowrap">Reels</button>
+                <button class="px-4 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors whitespace-nowrap">Story</button>
+                <button class="px-4 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors whitespace-nowrap">IGTV</button>
+                <button class="px-4 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors whitespace-nowrap">Carousel</button>
+                <button class="px-4 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors whitespace-nowrap">Viewer</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-b from-blue-50 to-white py-12 sm:py-16 lg:py-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+                    Download Instagram Videos, Photos,
+                    <br class="hidden sm:block">
+                    Reels, IGTV & Carousel
+                </h2>
+                <p class="text-lg text-gray-600">
+                    Fast, free, and easy to use Instagram content downloader
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-8">
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="flex-1 relative">
+                        <input
+                            type="text"
+                            id="urlInput"
+                            placeholder="Paste Instagram link here..."
+                            class="w-full px-4 py-3 pr-24 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-gray-700"
+                        >
+                        <div class="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+                            <button id="pasteBtn" class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors" title="Paste">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                </svg>
+                            </button>
+                            <button id="clearBtn" class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors hidden" title="Clear">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="M18 6 6 18"/>
+                                    <path d="m6 6 12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors shadow-lg hover:shadow-xl">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" x2="12" y1="15" y2="3"/>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <img
+                    src="https://images.pexels.com/photos/147413/twitter-facebook-together-exchange-of-information-147413.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop"
+                    alt="Instagram Download"
+                    class="rounded-xl shadow-lg max-w-full h-auto"
+                >
+            </div>
+        </div>
+    </section>
+
+    <!-- How To Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-12">
+                How to Download Instagram Content
+            </h2>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                        </svg>
+                    </div>
+                    <div class="mb-2 text-sm font-semibold text-blue-600">Step 1</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Copy the Instagram URL</h3>
+                    <p class="text-gray-600">Open Instagram and copy the link of the content you want to download</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m9 9 5 12 1.774-5.226L21 14 9 9z"/>
+                            <path d="m16.071 16.071 4.243 4.243"/>
+                        </svg>
+                    </div>
+                    <div class="mb-2 text-sm font-semibold text-blue-600">Step 2</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Paste into FastDL</h3>
+                    <p class="text-gray-600">Paste the copied link into the input field above</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" x2="12" y1="15" y2="3"/>
+                        </svg>
+                    </div>
+                    <div class="mb-2 text-sm font-semibold text-blue-600">Step 3</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Download</h3>
+                    <p class="text-gray-600">Click the download button and save in your preferred quality</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-12">
+                Why Choose FastDL?
+            </h2>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-lg mb-4">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Fast Download</h3>
+                    <p class="text-gray-600 text-sm">Lightning-fast download speeds to save your time</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-lg mb-4">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/>
+                            <path d="M12 18h.01"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Multi-Device</h3>
+                    <p class="text-gray-600 text-sm">Works on all devices - Windows, Mac, iOS, Android</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-lg mb-4">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Original Quality</h3>
+                    <p class="text-gray-600 text-sm">Download content in its original quality without compression</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-lg mb-4">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Privacy & Security</h3>
+                    <p class="text-gray-600 text-sm">Your privacy is protected. No data stored or shared</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-12">
+                All Instagram Content Types Supported
+            </h2>
+
+            <div class="space-y-4" id="capabilitiesAccordion">
+                <div class="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 transition-colors">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-6 text-left" data-target="cap-0">
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/>
+                                    <rect x="2" y="6" width="14" height="12" rx="2"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900">Video Downloader</h3>
+                        </div>
+                        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="cap-0" class="accordion-content">
+                        <div class="px-6 pb-6">
+                            <p class="text-gray-600 pl-16">Download Instagram videos in high quality. Supports both single videos and videos from carousel posts.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 transition-colors">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-6 text-left" data-target="cap-1">
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                                    <circle cx="9" cy="9" r="2"/>
+                                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900">Photos Downloader</h3>
+                        </div>
+                        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="cap-1" class="accordion-content">
+                        <div class="px-6 pb-6">
+                            <p class="text-gray-600 pl-16">Save Instagram photos to your device. Download single images or entire photo albums from carousel posts.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 transition-colors">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-6 text-left" data-target="cap-2">
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                    <path d="m16 10-4-4-4 4"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900">Reels Downloader</h3>
+                        </div>
+                        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="cap-2" class="accordion-content">
+                        <div class="px-6 pb-6">
+                            <p class="text-gray-600 pl-16">Download Instagram Reels in their original quality. Save your favorite short-form videos instantly.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 transition-colors">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-6 text-left" data-target="cap-3">
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <rect width="20" height="15" x="2" y="7" rx="2" ry="2"/>
+                                    <polyline points="17 2 12 7 7 2"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900">IGTV Downloader</h3>
+                        </div>
+                        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="cap-3" class="accordion-content">
+                        <div class="px-6 pb-6">
+                            <p class="text-gray-600 pl-16">Download long-form IGTV videos. Perfect for saving tutorials, interviews, and extended content.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 transition-colors">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-6 text-left" data-target="cap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <rect width="7" height="7" x="3" y="3" rx="1"/>
+                                    <rect width="7" height="7" x="14" y="3" rx="1"/>
+                                    <rect width="7" height="7" x="14" y="14" rx="1"/>
+                                    <rect width="7" height="7" x="3" y="14" rx="1"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900">Carousel/Album Downloader</h3>
+                        </div>
+                        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="cap-4" class="accordion-content">
+                        <div class="px-6 pb-6">
+                            <p class="text-gray-600 pl-16">Download entire Instagram carousels. Save all photos and videos from multi-media posts at once.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">
+                Frequently Asked Questions
+            </h2>
+            <p class="text-center text-gray-600 mb-12">
+                Find answers to common questions about FastDL
+            </p>
+
+            <div class="space-y-3" id="faqAccordion">
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-0">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">What is FastDL?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-0" class="accordion-content active">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">FastDL is a free online tool that allows you to download Instagram videos, photos, reels, IGTV, and carousel posts quickly and easily without any registration.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-1">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">Is it legal to download Instagram content?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-1" class="accordion-content">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">You should only download content that you have permission to use. Always respect copyright laws and the rights of content creators.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-2">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">Do I need to install any software?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-2" class="accordion-content">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">No, FastDL is completely web-based. You don't need to install any software or browser extensions.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-3">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">Is FastDL free to use?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-3" class="accordion-content">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">Yes, FastDL is completely free. There are no hidden charges or subscription fees.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-4">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">Do I need to log in to Instagram?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-4" class="accordion-content">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">No, you don't need to provide your Instagram credentials. Simply paste the link and download.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-5">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">What formats are supported?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-5" class="accordion-content">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">FastDL downloads content in its original format - MP4 for videos and JPG/PNG for images.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-6">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">Is there a download limit?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-6" class="accordion-content">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">No, there are no limits. You can download as many posts as you want.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-7">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">Which devices are supported?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-7" class="accordion-content">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">FastDL works on all devices including Windows, Mac, Linux, iOS, and Android devices.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-8">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">Where are downloaded files saved?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-8" class="accordion-content">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">Downloaded files are saved to your device's default download folder as specified in your browser settings.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-9">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">Why isn't my download working?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-9" class="accordion-content">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">Make sure the Instagram link is correct and the content is public. Private account content cannot be downloaded.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-10">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">Can I download from private accounts?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-10" class="accordion-content">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">No, you can only download content from public Instagram accounts.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="accordion-trigger w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors" data-target="faq-11">
+                        <h3 class="text-base font-semibold text-gray-900 pr-4">Is my data safe?</h3>
+                        <svg class="accordion-icon flex-shrink-0 text-gray-400 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div id="faq-11" class="accordion-content">
+                        <div class="px-5 pb-5">
+                            <p class="text-gray-600 leading-relaxed">Yes, we don't store any of your data. All downloads are processed securely and privately.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-white font-semibold mb-4">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-semibold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-semibold mb-4">Tools</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition-colors">Background Remover</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Pinterest Downloader</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-semibold mb-4">Follow Us</h3>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/>
+                                <path d="m10 15 5-3-5-3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-gray-800">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p class="text-sm text-gray-400">© 2020-2024 FastDL. All rights reserved.</p>
+                    <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-1 text-sm">
+                            <span class="text-yellow-400">★</span>
+                            <span class="text-white font-semibold">4.91</span>
+                            <span class="text-gray-400">/ 15,483 reviews</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+</body>
+</html>
