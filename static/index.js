@@ -53,49 +53,6 @@ urlInput.addEventListener('input', () => {
     }
 });
 
-downloadBtn.addEventListener('click', async () => {
-    const url = urlInput.value.trim();
-
-    if (!url) {
-        console.log("empty");
-        return;
-    }
-    downloadBtn.disabled = true;
-    spinner.classList.remove("hidden");
-    icon.classList.add("hidden");
-    btnText.textContent = "Downloading...";
-
-
-    try {
-        const response = await fetch(`${backendUrl}/download`, {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                url: url
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log("Response:", data);
-
-    } catch (error) {
-        console.error("Request failed:", error);
-    }finally {
-        downloadBtn.disabled = false;
-        spinner.classList.add("hidden");
-        icon.classList.remove("hidden");
-        btnText.textContent = "Download";
-    }
-
-});
-
 downloadBtn.addEventListener("click", async () => {
     const inputUrl = urlInput.value?.trim();
     if (!inputUrl) return;
@@ -135,7 +92,7 @@ downloadBtn.addEventListener("click", async () => {
         a.download = data.file_path.split("/").pop(); // filename hint
         document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
+        a.remove();
 
     } catch (err) {
         console.error("Error:", err);
