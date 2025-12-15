@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
-import logging, os
+import logging, os, shutil
 from urllib.parse import quote
 
 from downloader import download_video, VideoDownloadError
@@ -67,6 +67,7 @@ def stream_file(
     resolved_path = Path(file_path).resolve()
     if not resolved_path.is_file():
         raise HTTPException(status_code=404, detail="File not found")
+    parent_dir = resolved_path.parent
     def file_iterator():
         try:
             with open(resolved_path, "rb") as f:
@@ -76,12 +77,21 @@ def stream_file(
                         break
                     yield chunk
         finally:
-            # ✅ Always delete file (success, error, disconnect)
+            # ✅ Delete file
             try:
-                os.remove(resolved_path)
-                print(f"Deleted file: {resolved_path}")
+                if resolved_path.exists():
+                    resolved_path.unlink()
+                    print(f"Deleted file: {resolved_path}")
             except Exception as e:
-                print(f"Failed to delete file: {e}")
+                print(f"File delete failed: {e}")
+
+            # ✅ Delete UUID folder
+            try:
+                if parent_dir.exists() and parent_dir.is_dir():
+                    shutil.rmtree(parent_dir)
+                    print(f"Deleted folder: {parent_dir}")
+            except Exception as e:
+                print(f"Folder delete failed: {e}")
 
     filename = resolved_path.name
     encoded_filename = quote(filename)
