@@ -2,6 +2,7 @@ import yt_dlp
 import os
 from pathlib import Path
 import logging
+from uuid import uuid4
 
 logger = logging.getLogger(__name__)
 
@@ -10,10 +11,11 @@ SUPPORTED_DOMAINS = ("instagram.com", "facebook.com")
 class VideoDownloadError(Exception):
     pass
 
-def download_video(url: str, output_dir: str) -> str:
+def download_video(url: str) -> str:
     if not any(domain in url for domain in SUPPORTED_DOMAINS):
         raise VideoDownloadError("Only Instagram and Facebook URLs are supported")
 
+    output_dir = f"Downloads/{str(uuid4().hex)}"
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 

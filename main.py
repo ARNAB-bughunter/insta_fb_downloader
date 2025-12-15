@@ -1,12 +1,14 @@
-from fastapi import FastAPI, HTTPException, status, Request
+from fastapi import FastAPI, HTTPException, status, Request, Query
 from fastapi.staticfiles import StaticFiles
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
 import logging
+from urllib.parse import quote
 
 from downloader import download_video, VideoDownloadError
 from schemas import DownloadRequest, DownloadResponse
+from pathlib import Path
 from rate_limiter import limiter, rate_limit_exceeded_handler
 
 app = FastAPI(
@@ -34,7 +36,6 @@ async def download_endpoint(request: Request, payload: DownloadRequest):
     try:
         file_path = download_video(
             url=str(payload.url),
-            output_dir=payload.output_dir or "downloads",
         )
 
         return DownloadResponse(
@@ -54,6 +55,40 @@ async def download_endpoint(request: Request, payload: DownloadRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unexpected server error",
         )
+    
+
+
+@app.get("/files")
+@limiter.limit("10/minute")
+def stream_file(
+    request: Request,
+    file_path: str = Query(..., description="Relative file path returned by /download")
+):
+    # BASE_DOWNLOAD_DIR = Path("").resolve()
+    resolved_path = Path(file_path).resolve()
+    
+    # 🔒 Security: must stay inside Downloads directory
+    # if not str(resolved_path).startswith(str(BASE_DOWNLOAD_DIR)):
+        # raise HTTPException(status_code=400, detail="Invalid file path")
+    
+    if not resolved_path.is_file():
+        raise HTTPException(status_code=404, detail="File not found")
+    
+    def file_iterator():
+        with open(resolved_path, "rb") as f:
+            while chunk := f.read(1024 * 1024):
+                yield chunk
+
+    filename = resolved_path.name
+    encoded_filename = quote(filename)
+
+    return StreamingResponse(
+        file_iterator(),
+        media_type="application/octet-stream",
+        headers={
+            "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}"
+        }
+    )
 
 @app.get("/health", tags=["Health"])
 async def health_check():
