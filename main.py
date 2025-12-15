@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
-import logging
+import logging, os
 from urllib.parse import quote
 
 from downloader import download_video, VideoDownloadError
@@ -64,20 +64,24 @@ def stream_file(
     request: Request,
     file_path: str = Query(..., description="Relative file path returned by /download")
 ):
-    # BASE_DOWNLOAD_DIR = Path("").resolve()
     resolved_path = Path(file_path).resolve()
-    
-    # 🔒 Security: must stay inside Downloads directory
-    # if not str(resolved_path).startswith(str(BASE_DOWNLOAD_DIR)):
-        # raise HTTPException(status_code=400, detail="Invalid file path")
-    
     if not resolved_path.is_file():
         raise HTTPException(status_code=404, detail="File not found")
-    
     def file_iterator():
-        with open(resolved_path, "rb") as f:
-            while chunk := f.read(1024 * 1024):
-                yield chunk
+        try:
+            with open(resolved_path, "rb") as f:
+                while True:
+                    chunk = f.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    yield chunk
+        finally:
+            # ✅ Always delete file (success, error, disconnect)
+            try:
+                os.remove(resolved_path)
+                print(f"Deleted file: {resolved_path}")
+            except Exception as e:
+                print(f"Failed to delete file: {e}")
 
     filename = resolved_path.name
     encoded_filename = quote(filename)

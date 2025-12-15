@@ -1,6 +1,7 @@
 // Language dropdown toggle
 const langToggle = document.getElementById('langToggle');
 const langDropdown = document.getElementById('langDropdown');
+const backendUrl = `${window.location.protocol}//${window.location.hostname}:9191`;
 
 langToggle.addEventListener('click', () => {
     langDropdown.classList.toggle('active');
@@ -24,6 +25,10 @@ langDropdown.querySelectorAll('button').forEach(btn => {
 const urlInput = document.getElementById('urlInput');
 const pasteBtn = document.getElementById('pasteBtn');
 const clearBtn = document.getElementById('clearBtn');
+const downloadBtn = document.getElementById('downloadButton');
+const spinner = document.getElementById("spinner");
+const icon = document.getElementById("downloadIcon");
+const btnText = document.getElementById("btnText");
 
 pasteBtn.addEventListener('click', async () => {
     try {
@@ -47,6 +52,104 @@ urlInput.addEventListener('input', () => {
         clearBtn.classList.add('hidden');
     }
 });
+
+downloadBtn.addEventListener('click', async () => {
+    const url = urlInput.value.trim();
+
+    if (!url) {
+        console.log("empty");
+        return;
+    }
+    downloadBtn.disabled = true;
+    spinner.classList.remove("hidden");
+    icon.classList.add("hidden");
+    btnText.textContent = "Downloading...";
+
+
+    try {
+        const response = await fetch(`${backendUrl}/download`, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                url: url
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Response:", data);
+
+    } catch (error) {
+        console.error("Request failed:", error);
+    }finally {
+        downloadBtn.disabled = false;
+        spinner.classList.add("hidden");
+        icon.classList.remove("hidden");
+        btnText.textContent = "Download";
+    }
+
+});
+
+downloadBtn.addEventListener("click", async () => {
+    const inputUrl = urlInput.value?.trim();
+    if (!inputUrl) return;
+
+    // 🔄 Start loading UI
+    downloadBtn.disabled = true;
+    spinner.classList.remove("hidden");
+    icon.classList.add("hidden");
+    btnText.textContent = "Downloading...";
+
+    try {
+        /* 1️⃣ Call /download */
+        const res = await fetch(`${backendUrl}/download`, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ url: inputUrl })
+        });
+
+        if (!res.ok) throw new Error(`Download API failed: ${res.status}`);
+
+        const data = await res.json();
+
+        if (data.status !== "success" || !data.file_path) {
+            throw new Error("Invalid download response");
+        }
+
+        /* 2️⃣ Call /files and trigger browser download */
+        const encodedPath = encodeURIComponent(data.file_path);
+        const fileUrl = `${backendUrl}/files?file_path=${encodedPath}`;
+
+        // Create temporary anchor for download
+        const a = document.createElement("a");
+        a.href = fileUrl;
+        a.download = data.file_path.split("/").pop(); // filename hint
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+    } catch (err) {
+        console.error("Error:", err);
+        alert("Download failed. Please try again.");
+    } finally {
+        // ✅ Reset UI
+        downloadBtn.disabled = false;
+        spinner.classList.add("hidden");
+        icon.classList.remove("hidden");
+        btnText.textContent = "Download";
+    }
+});
+
+
 
 // Accordion functionality
 function setupAccordion(containerSelector) {

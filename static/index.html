@@ -6,6 +6,7 @@
     <title>Responsive UI Replication</title>
     <meta name="twitter:card" content="summary_large_image">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/index.js" defer></script>
     <style>
         .rotate-180 {
             transform: rotate(180deg);
@@ -115,13 +116,23 @@
                             </button>
                         </div>
                     </div>
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors shadow-lg hover:shadow-xl">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <button id="downloadButton"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed">
+                        <!-- Icon -->
+                        <svg id="downloadIcon" width="20" height="20" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            viewBox="0 0 24 24">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                             <polyline points="7 10 12 15 17 10"/>
                             <line x1="12" x2="12" y1="15" y2="3"/>
                         </svg>
-                        Download
+
+                        <!-- Spinner -->
+                        <span id="spinner"
+                            class="hidden w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin">
+                        </span>
+
+                        <span id="btnText">Download</span>
                     </button>
                 </div>
             </div>

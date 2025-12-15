@@ -1,21 +1,5 @@
 FROM redhat/ubi9-minimal:9.5-1731604394
  
-# RUN rpm -i https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
-# && microdnf update -y
- 
- 
-# RUN microdnf install -y \
-#         gcc \
-#         gcc-c++ \
-#         python3.11 \
-#         python3.11-pip \
-#         python3.11-devel \
-#         glibc-langpack-en \
-#         mesa-libGL \
-#         gzip \
-#         tar \
-#         nano
-
 RUN microdnf install -y \
         python3.11 \
         python3.11-pip \
@@ -35,6 +19,4 @@ RUN rm -rf /root/.cache \
 
 COPY . .
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
-
- 
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "9191", "--workers", "4"]
