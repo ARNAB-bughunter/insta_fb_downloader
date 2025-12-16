@@ -4,8 +4,8 @@ services:
   api:
     build: .
     container_name: insta_fb_api
-    ports:
-      - "9191:9191"
+    expose:
+      - "9191"
     depends_on:
       - redis
     environment:
@@ -16,3 +16,13 @@ services:
     container_name: redis
     ports:
       - "6379:6379"
+
+  nginx:
+    image: nginx:alpine
+    container_name: insta_fb_nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
